@@ -266,13 +266,13 @@ public class Application {
         for (int i = 0; i < nThreads; i++){
         	
         	try{
-        		crawlerThreads.get(i).wait();
+        		crawlerThreads.get(i).join();
         	}catch (InterruptedException ie){
         		ie.printStackTrace();
         	}
         	
         	try{
-        		downloadThreads.get(i).wait();
+        		downloadThreads.get(i).join();
         	}catch (InterruptedException ie){
         		ie.printStackTrace();
         	}        	
