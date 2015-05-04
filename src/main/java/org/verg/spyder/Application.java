@@ -231,7 +231,7 @@ public class Application {
     	
         final List<Thread> crawlerThreads = new ArrayList<Thread>();
         final List<Thread> downloadThreads = new ArrayList<Thread>();
-        final int nThreads =  2;
+        final int nThreads = Runtime.getRuntime().availableProcessors() * 2;
         
         LOGGER.info(String.format("Initiating parallel crawling with %d threads", nThreads));
         
