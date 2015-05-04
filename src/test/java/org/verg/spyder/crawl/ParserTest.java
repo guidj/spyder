@@ -1,4 +1,4 @@
-package org.verg.spyder.craw;
+package org.verg.spyder.crawl;
 
 import java.util.List;
 import java.util.ArrayList;
