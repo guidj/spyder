@@ -6,12 +6,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.apache.log4j.Logger;
+
 import org.verg.spyder.crawl.ContentGrabber;
 import org.verg.spyder.crawl.Harvester;
 import org.verg.spyder.crawl.Parser;
@@ -22,7 +24,7 @@ import org.verg.spyder.services.WebPageService;
 
 public class Application {
 
-	private final static Logger LOGGER = Logger.getLogger(Harvester.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(Application.class.getName());
 	
 	private final static String DOWNLOAD_DIR = "data";
 	
@@ -185,7 +187,7 @@ public class Application {
 	    				
 	    				LOGGER.info(String.format("Downloaded image '%s'", file.getPath()));
 	    			}else{
-	    				LOGGER.severe(String.format("Failed to download file '%s'", file.getPath()));
+	    				LOGGER.error(String.format("Failed to download file '%s'", file.getPath()));
 	    			}
     			}
     		}    			
@@ -227,10 +229,13 @@ public class Application {
     
     private void parallelRun(final String baseUrl){
     	
-        List<Thread> crawlerThreads = new ArrayList<Thread>();
-        List<Thread> downloadThreads = new ArrayList<Thread>();
+        final List<Thread> crawlerThreads = new ArrayList<Thread>();
+        final List<Thread> downloadThreads = new ArrayList<Thread>();
+        final int nThreads =  2;
         
-        for (int i = 0; i < 2; i++){
+        LOGGER.info(String.format("Initiating parallel crawling with %d threads", nThreads));
+        
+        for (int i = 0; i < nThreads; i++){
         	
         	crawlerThreads.add(new Thread(){
         			@Override
@@ -253,12 +258,12 @@ public class Application {
         	});
         }
         
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < nThreads; i++){
         	crawlerThreads.get(i).start();
         	downloadThreads.get(i).start();
         }
         
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < nThreads; i++){
         	
         	try{
         		crawlerThreads.get(i).wait();

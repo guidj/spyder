@@ -6,11 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
+
 
 public class ContentGrabber {
 	
-	private final static Logger LOGGER = Logger.getLogger(Harvester.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(ContentGrabber.class.getName());
 	
 	public static String crawl(String url){
 		
@@ -31,10 +33,10 @@ public class ContentGrabber {
 			
 		} catch (MalformedURLException mue){
 			
-			LOGGER.severe(mue.getStackTrace().toString());
+			LOGGER.error(mue.getStackTrace().toString());
 			
 		} catch (IOException ioe){
-			LOGGER.severe(ioe.getStackTrace().toString());
+			LOGGER.error(ioe.getStackTrace().toString());
 		} finally {
 			
 			try {

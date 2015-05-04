@@ -3,7 +3,6 @@ package org.verg.spyder.crawl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
-import java.util.logging.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,6 +11,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+
+import org.apache.log4j.Logger;
+
 
 public class Harvester {
 	
@@ -25,7 +27,7 @@ public class Harvester {
 	public static String deriveFileFromUrl(String url){
 		
 		if (url.indexOf(HTML_HTTP) == -1){
-			LOGGER.warning(String.format("Invalid URL: '%s'", url));
+			LOGGER.warn(String.format("Invalid URL: '%s'", url));
 			
 			return null;
 		}
