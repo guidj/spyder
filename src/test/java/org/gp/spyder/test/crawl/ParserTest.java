@@ -1,13 +1,13 @@
-package org.verg.spyder.crawl;
+package org.gp.spyder.test.crawl;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
-import org.junit.Test;
 
-import org.verg.spyder.crawl.Parser;
+import org.gp.spyder.crawl.Parser;
+import org.junit.Test;
 
 
 public class ParserTest {

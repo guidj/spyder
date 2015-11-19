@@ -1,4 +1,4 @@
-package org.verg.spyder.domain;
+package org.gp.spyder.domain;
 
 import java.util.Set;
 
@@ -27,7 +27,7 @@ public class WebPage {
 	
     @Fetch
     @RelatedToVia
-    private Set<LinksToWebPage> linksToWebPage;
+    private Set<Link> linksToWebPage;
     
     @Fetch
     @RelatedToVia
@@ -66,7 +66,7 @@ public class WebPage {
     	return this.status;
     }
     
-    public Set<LinksToWebPage> getReferencedWebPages(){
+    public Set<Link> getReferencedWebPages(){
     	return this.linksToWebPage;
     }
     
@@ -74,8 +74,8 @@ public class WebPage {
     	return this.linksToImage;
     }    
     
-    public LinksToWebPage addLinkedWebPage(WebPage otherWebPage) {
-    	LinksToWebPage r = new LinksToWebPage(this, otherWebPage);
+    public Link addLinkedWebPage(WebPage otherWebPage) {
+    	Link r = new Link(this, otherWebPage);
     	this.linksToWebPage.add(r);    	
     	return r;
     }

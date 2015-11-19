@@ -1,4 +1,4 @@
-package org.verg.spyder.domain;
+package org.gp.spyder.domain;
 
 import org.springframework.data.neo4j.annotation.EndNode;
 import org.springframework.data.neo4j.annotation.GraphId;

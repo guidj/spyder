@@ -19,18 +19,12 @@
     <context:component-scan base-package="org.verg.spyder" />
 
     <neo4j:config storeDirectory="target/neo4j-db-plain"
-                  base-package="org.verg.spyder.domain" />
+                  base-package="spyder.domain" />
  
     <neo4j:repositories base-package="org.verg.spyder.repositories"/>
     <tx:annotation-driven />
 
     <beans>
-        <bean id="webPageService" class="org.verg.spyder.services.WebPageService">
-        </bean>
-        <bean id="imageService" class="org.verg.spyder.services.ImageService">
-        </bean>
-        <bean id="webPageLinkService" class="org.verg.spyder.services.WebPageLinkService">
-        </bean>        
         
 		<!--<bean id="graphDatabaseService" class="org.neo4j.kernel.EmbeddedGraphDatabase"
 		    destroy-method="shutdown">

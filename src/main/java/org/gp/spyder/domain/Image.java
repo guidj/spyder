@@ -1,4 +1,4 @@
-package org.verg.spyder.domain;
+package org.gp.spyder.domain;
 
 import java.util.Set;
 

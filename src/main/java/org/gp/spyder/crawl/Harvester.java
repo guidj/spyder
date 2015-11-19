@@ -1,12 +1,16 @@
-package org.verg.spyder.crawl;
+package org.gp.spyder.crawl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -83,7 +87,9 @@ public class Harvester {
 		try {
 			
 			webUrl = new URL(url);
-			readableByteChannel = Channels.newChannel(webUrl.openStream());
+			HttpURLConnection httpConnection = (HttpURLConnection) webUrl.openConnection();
+			httpConnection.addRequestProperty("User-Agent", "Mozilla/5.0");
+			readableByteChannel = Channels.newChannel(httpConnection.getInputStream());
 			fileOutputStream = new FileOutputStream(filePath);
 			fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
 			
@@ -109,4 +115,45 @@ public class Harvester {
 		
 		return file;
 	}
+	
+	public static String crawl(String url){
+		
+		InputStream inputStream = null;
+		BufferedReader bufferedReader;
+		String line;
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		try {
+			
+			URL webUrl = new URL(url);
+			inputStream = webUrl.openStream();
+			bufferedReader = new BufferedReader(new InputStreamReader(inputStream));			
+			
+			while ((line = bufferedReader.readLine()) != null){
+				stringBuilder.append(line);
+			}
+			
+		} catch (MalformedURLException mue){
+			
+			LOGGER.error(mue.getStackTrace().toString());
+			
+		} catch (IOException ioe){
+			LOGGER.error(ioe.getStackTrace().toString());
+		} finally {
+			
+			try {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (IOException ioe) {
+				
+			}
+		}
+		
+		if (stringBuilder.length() > 0){
+			return stringBuilder.toString();
+		}else{
+			return null;
+		}		
+	}		
 }

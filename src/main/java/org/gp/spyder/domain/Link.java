@@ -1,4 +1,4 @@
-package org.verg.spyder.domain;
+package org.gp.spyder.domain;
 
 import org.springframework.data.neo4j.annotation.EndNode;
 import org.springframework.data.neo4j.annotation.GraphId;
@@ -7,17 +7,17 @@ import org.springframework.data.neo4j.annotation.StartNode;
 
 
 @RelationshipEntity(type="LINKS_TO")
-public class LinksToWebPage {
+public class Link {
 	@GraphId Long id;
     @StartNode WebPage source;
     @EndNode WebPage target;
     
-    public LinksToWebPage(WebPage source, WebPage target){
+    public Link(WebPage source, WebPage target){
     	this.source = source;
     	this.target = target;
     }
     
-    public LinksToWebPage(){
+    public Link(){
     	
     }
     
@@ -39,7 +39,7 @@ public class LinksToWebPage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        LinksToWebPage linksToWebPage = (LinksToWebPage) o;
+        Link linksToWebPage = (Link) o;
         if (id == null) return super.equals(o);
         return id.equals(linksToWebPage.id);
 
