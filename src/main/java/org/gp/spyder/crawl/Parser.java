@@ -1,6 +1,7 @@
 package org.gp.spyder.crawl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Matcher;
@@ -138,14 +139,14 @@ public class Parser extends Thread {
 				urls = extractUrls(rawText);
 				imgUrls = extractImageUrls(rawText);
 
-				for (String url : urls) {
+				for (String url : new HashSet<String>(urls)) {
 					if (dbContext.getWebPageRepository().findByUrl(url) == null) {
 						LOGGER.info("New URL: [" + url + "]");
 						urlQueue.put(url);
 					}
 				}
 
-				for (String imgUrl : imgUrls) {
+				for (String imgUrl : new HashSet<String>(imgUrls)) {
 					if (dbContext.getImageRepository().findByUrl(imgUrl) == null) {
 						LOGGER.info("New Image: [" + imgUrl + "]");
 						imageQueue.put(imgUrl);
