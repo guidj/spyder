@@ -16,12 +16,12 @@
 
 	<context:spring-configured/>
     <context:annotation-config/>
-    <context:component-scan base-package="org.verg.spyder" />
+    <context:component-scan base-package="org.gp.spyder" />
 
     <neo4j:config storeDirectory="target/neo4j-db-plain"
-                  base-package="spyder.domain" />
+                  base-package="org.gp.spyder.domain" />
  
-    <neo4j:repositories base-package="org.verg.spyder.repositories"/>
+    <neo4j:repositories base-package="org.gp.spyder.repositories"/>
     <tx:annotation-driven />
 
     <beans>
