@@ -1,10 +1,10 @@
 package org.gp.spyder.crawl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.List;
-import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.gp.spyder.DBContext;

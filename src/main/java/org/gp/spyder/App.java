@@ -1,42 +1,24 @@
 package org.gp.spyder;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.apache.log4j.Logger;
 import org.gp.spyder.crawl.Crawler;
 import org.gp.spyder.crawl.Harvester;
 import org.gp.spyder.crawl.Parser;
-import org.gp.spyder.domain.Image;
 import org.gp.spyder.domain.WebPage;
 import org.gp.spyder.repositories.ImageRepository;
-import org.gp.spyder.repositories.LinkRepository;
 import org.gp.spyder.repositories.WebPageRepository;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App {
 
 	private final static Logger LOGGER = Logger.getLogger(App.class.getName());
 	
 	private final static String DOWNLOAD_DIR = "data";
-//	
-//	@Autowired
-//    private WebPageRepository webPageRepository;
-//    
-//    @Autowired
-//    private static ImageRepository imageRepository;
     
     private static void recursiveDelete(File file) {
         //to end the recursive loop
@@ -62,7 +44,8 @@ public class App {
     
     public static void main(String[] args) {
     	
-//    	deleteDatabase();   	
+//    	deleteDatabase();
+    	
         @SuppressWarnings("resource")
 		ApplicationContext context = new ClassPathXmlApplicationContext("spring/context.xml");
 

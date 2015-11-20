@@ -17,7 +17,6 @@ import java.util.concurrent.BlockingQueue;
 import org.apache.log4j.Logger;
 import org.gp.spyder.DBContext;
 import org.gp.spyder.domain.Image;
-import org.gp.spyder.domain.WebPage;
 
 public class Harvester extends Thread {
 
