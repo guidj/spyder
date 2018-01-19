@@ -19,82 +19,83 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App {
 
-	private final static Logger LOGGER = Logger.getLogger(App.class.getName());
-	
-	private final static String DOWNLOAD_DIR = "data";
-    
-    private static void recursiveDelete(File file) {
-        //to end the recursive loop
-        if (!file.exists())
-            return;
-         
-        //if directory, go inside and call recursively
-        if (file.isDirectory()) {
-            for (File f : file.listFiles()) {
-                //call recursively
-                recursiveDelete(f);
-            }
-        }
-        //call delete to delete files and empty directory
-        file.delete();
+  private final static Logger LOGGER = Logger.getLogger(App.class.getName());
+
+  private final static String DOWNLOAD_DIR = "data";
+
+  private static void recursiveDelete(File file) {
+    //to end the recursive loop
+    if (!file.exists()) {
+      return;
     }
-    
-    private static void deleteDatabase(){
-    	File file = new File("target/neo4j-db-plain");
-    	
-    	recursiveDelete(file);
+
+    //if directory, go inside and call recursively
+    if (file.isDirectory()) {
+      for (File f : file.listFiles()) {
+        //call recursively
+        recursiveDelete(f);
+      }
     }
-    
-    public static void main(String[] args) throws InterruptedException {
-    	
+    //call delete to delete files and empty directory
+    file.delete();
+  }
+
+  private static void deleteDatabase() {
+    File file = new File("target/neo4j-db-plain");
+
+    recursiveDelete(file);
+  }
+
+  public static void main(String[] args) throws InterruptedException {
+
 //    	deleteDatabase();
-    	
-        @SuppressWarnings("resource")
-		ApplicationContext context = new ClassPathXmlApplicationContext("spring/context.xml");
 
-        final String baseUrl = "http://www.mangareader.net";
-        final BlockingQueue<String> dataQueue = new LinkedBlockingQueue<String>();
-        final BlockingQueue<String> urlQueue = new LinkedBlockingQueue<String>();
-        final BlockingQueue<String> imgQueue = new LinkedBlockingQueue<String>();
+    @SuppressWarnings("resource")
+    ApplicationContext context = new ClassPathXmlApplicationContext("spring/context.xml");
 
-        urlQueue.add(baseUrl);
-        
-        DBContext dbContext = new DBContext(
-        		(WebPageRepository)context.getBean("webPageRepository"),
-        		(ImageRepository)context.getBean("imageRepository")
-        		);
-        
-        for (WebPage webPage: dbContext.getWebPageRepository().getWebPages(false, 100)) {
-        	urlQueue.add(webPage.getUrl());
-        }
-        
-        LOGGER.info(String.format("Starting with URL Queue of with %d entries", urlQueue.size()));
-        LOGGER.info("Starting Crawler, Parser and Harvester workers...");        
-        
-        int  corePoolSize  =    6;
-        int  maxPoolSize   =   12;
-        long keepAliveTime = 5000;
+    final String baseUrl = "http://www.mangareader.net";
+    final BlockingQueue<String> dataQueue = new LinkedBlockingQueue<String>();
+    final BlockingQueue<String> urlQueue = new LinkedBlockingQueue<String>();
+    final BlockingQueue<String> imgQueue = new LinkedBlockingQueue<String>();
 
-        ExecutorService threadPoolExecutor =
-                new ThreadPoolExecutor(
-                        corePoolSize,
-                        maxPoolSize,
-                        keepAliveTime,
-                        TimeUnit.MILLISECONDS,
-                        new LinkedBlockingQueue<Runnable>()
-                        );
-        
-        threadPoolExecutor.submit(new Crawler(dbContext, urlQueue, dataQueue));
-        threadPoolExecutor.submit(new Crawler(dbContext, urlQueue, dataQueue));
-        threadPoolExecutor.submit(new Parser(dbContext, baseUrl, urlQueue, dataQueue, imgQueue));
-        threadPoolExecutor.submit(new Parser(dbContext, baseUrl, urlQueue, dataQueue, imgQueue));
-        threadPoolExecutor.submit(new Harvester(dbContext, DOWNLOAD_DIR, imgQueue));
-        threadPoolExecutor.submit(new Harvester(dbContext, DOWNLOAD_DIR, imgQueue));
-        
-        while(threadPoolExecutor.isTerminated() == false) {
-        	Thread.sleep(1000);
-        }
-        
+    urlQueue.add(baseUrl);
+
+    DBContext dbContext = new DBContext(
+        (WebPageRepository) context.getBean("webPageRepository"),
+        (ImageRepository) context.getBean("imageRepository")
+    );
+
+    for (WebPage webPage : dbContext.getWebPageRepository().getWebPages(false, 100)) {
+      urlQueue.add(webPage.getUrl());
+    }
+
+    LOGGER.info(String.format("Starting with URL Queue of with %d entries", urlQueue.size()));
+    LOGGER.info("Starting Crawler, Parser and Harvester workers...");
+
+    int corePoolSize = 6;
+    int maxPoolSize = 12;
+    long keepAliveTime = 5000;
+
+    ExecutorService threadPoolExecutor =
+        new ThreadPoolExecutor(
+            corePoolSize,
+            maxPoolSize,
+            keepAliveTime,
+            TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>()
+        );
+
+    threadPoolExecutor.submit(new Crawler(dbContext, urlQueue, dataQueue));
+    threadPoolExecutor.submit(new Crawler(dbContext, urlQueue, dataQueue));
+    threadPoolExecutor.submit(new Parser(dbContext, baseUrl, urlQueue, dataQueue, imgQueue));
+    threadPoolExecutor.submit(new Parser(dbContext, baseUrl, urlQueue, dataQueue, imgQueue));
+    threadPoolExecutor.submit(new Harvester(dbContext, DOWNLOAD_DIR, imgQueue));
+    threadPoolExecutor.submit(new Harvester(dbContext, DOWNLOAD_DIR, imgQueue));
+
+    while (threadPoolExecutor.isTerminated() == false) {
+      Thread.sleep(1000);
+    }
+
 //        Thread crawler = new Crawler(dbContext, urlQueue, dataQueue);
 //        Thread parser = new Parser(dbContext, baseUrl, urlQueue, dataQueue, imgQueue);
 //        Thread harvester = new Harvester(dbContext, DOWNLOAD_DIR, imgQueue);      
@@ -103,7 +104,7 @@ public class App {
 //        crawler.start();
 //        parser.start();
 //        harvester.start();
-        
-        //TODO: when to stop?
-    }
+
+    //TODO: when to stop?
+  }
 }

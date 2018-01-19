@@ -4,3 +4,6 @@
 /target/
 data/
 log.txt
+
+.idea
+*.iml

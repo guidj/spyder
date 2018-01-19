@@ -8,18 +8,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Operator {
-	
-	@Autowired
-    private WebPageRepository webPageRepository;
-    
-    @Autowired
-    private ImageRepository imageRepository;
-    
-    public WebPageRepository pageRepo() {
-    	return webPageRepository;
-    }
-    
-    public ImageRepository ImageRepo() {
-    	return imageRepository;
-    }
+
+  @Autowired
+  private WebPageRepository webPageRepository;
+
+  @Autowired
+  private ImageRepository imageRepository;
+
+  public WebPageRepository pageRepo() {
+    return webPageRepository;
+  }
+
+  public ImageRepository ImageRepo() {
+    return imageRepository;
+  }
 }

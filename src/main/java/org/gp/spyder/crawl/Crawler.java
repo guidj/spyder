@@ -14,105 +14,105 @@ import org.gp.spyder.domain.WebPage;
 
 public class Crawler extends Thread {
 
-	private final static Logger LOGGER = Logger.getLogger(Crawler.class
-			.getName());
+  private final static Logger LOGGER = Logger.getLogger(Crawler.class
+      .getName());
 
-	private BlockingQueue<String> urlQueue;
-	private BlockingQueue<String> dataQueue;
+  private BlockingQueue<String> urlQueue;
+  private BlockingQueue<String> dataQueue;
 
-	DBContext dbContext;
+  DBContext dbContext;
 
-	public Crawler(DBContext dbContext, BlockingQueue<String> urlQueue,
-			BlockingQueue<String> dataQueue) {
-		this.dbContext = dbContext;
-		this.urlQueue = urlQueue;
-		this.dataQueue = dataQueue;
-	}
+  public Crawler(DBContext dbContext, BlockingQueue<String> urlQueue,
+      BlockingQueue<String> dataQueue) {
+    this.dbContext = dbContext;
+    this.urlQueue = urlQueue;
+    this.dataQueue = dataQueue;
+  }
 
-	public String crawl(String url) {
+  public String crawl(String url) {
 
-		InputStream inputStream = null;
-		BufferedReader bufferedReader;
-		String line;
-		StringBuilder stringBuilder = new StringBuilder();
+    InputStream inputStream = null;
+    BufferedReader bufferedReader;
+    String line;
+    StringBuilder stringBuilder = new StringBuilder();
 
-		try {
+    try {
 
-			URL webUrl = new URL(url);
-			inputStream = webUrl.openStream();
-			bufferedReader = new BufferedReader(new InputStreamReader(
-					inputStream));
+      URL webUrl = new URL(url);
+      inputStream = webUrl.openStream();
+      bufferedReader = new BufferedReader(new InputStreamReader(
+          inputStream));
 
-			while ((line = bufferedReader.readLine()) != null) {
-				stringBuilder.append(line);
-			}
+      while ((line = bufferedReader.readLine()) != null) {
+        stringBuilder.append(line);
+      }
 
-		} catch (MalformedURLException mue) {
+    } catch (MalformedURLException mue) {
 
-			LOGGER.error(mue.getStackTrace().toString());
+      LOGGER.error(mue.getStackTrace().toString());
 
-		} catch (IOException ioe) {
-			LOGGER.error(ioe.getStackTrace().toString());
-		} finally {
+    } catch (IOException ioe) {
+      LOGGER.error(ioe.getStackTrace().toString());
+    } finally {
 
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (IOException ioe) {
+      try {
+        if (inputStream != null) {
+          inputStream.close();
+        }
+      } catch (IOException ioe) {
 
-			}
-		}
+      }
+    }
 
-		if (stringBuilder.length() > 0) {
-			return stringBuilder.toString();
-		} else {
-			return null;
-		}
-	}
+    if (stringBuilder.length() > 0) {
+      return stringBuilder.toString();
+    } else {
+      return null;
+    }
+  }
 
-	@Override
-	public void run() {
-		try {
-			
-			WebPage page;
-			String url;
-			String rawText;
-			
-			while (true) {
+  @Override
+  public void run() {
+    try {
 
-				url = urlQueue.take();
+      WebPage page;
+      String url;
+      String rawText;
 
-				page = dbContext.getWebPageRepository().findByUrl(url);
+      while (true) {
 
-				if (page == null) {
-					page = new WebPage(url, false, 0);
-				}
-				
-				if (page.isCrawled() == false) {
+        url = urlQueue.take();
 
-					rawText = crawl(url);
+        page = dbContext.getWebPageRepository().findByUrl(url);
 
-					// TODO: Too naive. check what the issue was (400, 500, 404, etc)
-					if (rawText != null) {
-						dataQueue.put(rawText);
-						
-						page.setCrawled(true);
-						page.setStatus(1);
+        if (page == null) {
+          page = new WebPage(url, false, 0);
+        }
 
-						LOGGER.info("Data queue size: " + dataQueue.size());
-					} else {
-						page.setStatus(-1);
-					}
-				}
-				
-				dbContext.getWebPageRepository().save(page);
-				
-				Thread.sleep(1000);
+        if (page.isCrawled() == false) {
 
-			}
-		} catch (InterruptedException e) {
-			LOGGER.error(e);
-		}
-	}
+          rawText = crawl(url);
+
+          // TODO: Too naive. check what the issue was (400, 500, 404, etc)
+          if (rawText != null) {
+            dataQueue.put(rawText);
+
+            page.setCrawled(true);
+            page.setStatus(1);
+
+            LOGGER.info("Data queue size: " + dataQueue.size());
+          } else {
+            page.setStatus(-1);
+          }
+        }
+
+        dbContext.getWebPageRepository().save(page);
+
+        Thread.sleep(1000);
+
+      }
+    } catch (InterruptedException e) {
+      LOGGER.error(e);
+    }
+  }
 }
